@@ -1,10 +1,31 @@
 package se.lexicon.erik.gastronmic.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class MeasuredIngredient {
 	
-	private String id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	
+	@ManyToOne(fetch = FetchType.LAZY, 
+			cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "ingredient_id")	
 	private Ingredient ingredient;
+	
+	@ManyToOne(fetch = FetchType.LAZY, 
+			cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "recipe_id")
 	private Recipe recipe;
+	
 	private double amount;
 	private Measurement measurement;
 	
@@ -13,6 +34,8 @@ public class MeasuredIngredient {
 		this.amount = amount;
 		this.measurement = measurement;
 	}
+	
+	public MeasuredIngredient() {}
 
 	public Ingredient getIngredient() {
 		return ingredient;
@@ -46,18 +69,18 @@ public class MeasuredIngredient {
 		this.recipe = recipe;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
 	@Override
-	public int hashCode() {		
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		long temp;
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + id;
 		result = prime * result + ((measurement == null) ? 0 : measurement.hashCode());
 		return result;
 	}
@@ -73,10 +96,7 @@ public class MeasuredIngredient {
 		MeasuredIngredient other = (MeasuredIngredient) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
 		if (measurement != other.measurement)
 			return false;

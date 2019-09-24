@@ -3,12 +3,31 @@ package se.lexicon.erik.gastronmic.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Recipe {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int recipeId;
 	private String recipeName;
 	private String description;
+	
+	@OneToMany( mappedBy = "recipe", fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL
+			)
 	private List<MeasuredIngredient> ingredients;
+	
+	@OneToMany( mappedBy = "owner", fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL
+			)
 	private List<Instruction> instructions;
 	
 		
