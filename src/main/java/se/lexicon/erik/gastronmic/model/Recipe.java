@@ -41,8 +41,6 @@ public class Recipe {
 
 	public Recipe(String recipeName, String description) {
 		this(recipeName, description, new ArrayList<>(), new ArrayList<>());
-		this.recipeName = recipeName;
-		this.description = description;
 	}
 	
 	public Recipe () {}
