@@ -21,12 +21,12 @@ public class Recipe {
 	private String description;
 	
 	@OneToMany( mappedBy = "recipe", fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL
+			cascade = CascadeType.ALL, orphanRemoval = true
 			)
 	private List<MeasuredIngredient> ingredients;
 	
 	@OneToMany( mappedBy = "owner", fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL
+			cascade = CascadeType.ALL, orphanRemoval = true
 			)
 	private List<Instruction> instructions;
 	
@@ -81,6 +81,34 @@ public class Recipe {
 
 	public int getRecipeId() {
 		return recipeId;
+	}
+	
+	public void addInstruction(Instruction instruction) {
+		if(!instructions.contains(instruction)) {
+			instructions.add(instruction);
+			instruction.setRecipe(this);
+		}
+	}
+	
+	public void removeInstruction(Instruction toRemove) {
+		if(instructions.contains(toRemove)) {
+			instructions.remove(toRemove);
+			toRemove.setRecipe(null);			
+		}
+	}
+	
+	public void addIngredient(MeasuredIngredient ingredient) {
+		if(!ingredients.contains(ingredient)) {
+			ingredients.add(ingredient);
+			ingredient.setRecipe(this);
+		}
+	}
+	
+	public void removeIngredient(MeasuredIngredient ingredient) {
+		if(ingredients.contains(ingredient)) {
+			ingredients.remove(ingredient);
+			ingredient.setRecipe(null);
+		}
 	}
 
 	@Override
