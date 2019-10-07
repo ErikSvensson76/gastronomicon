@@ -24,7 +24,7 @@ public class Instruction {
 	private Recipe owner;
 	
 	public Instruction(String textContent) {
-		this.textContent = textContent;
+		setTextContent(textContent);
 	}
 	
 	public Instruction() {}
