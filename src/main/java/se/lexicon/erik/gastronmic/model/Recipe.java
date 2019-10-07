@@ -2,6 +2,7 @@ package se.lexicon.erik.gastronmic.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -107,15 +108,11 @@ public class Recipe {
 			ingredients.remove(ingredient);
 			ingredient.setRecipe(null);
 		}
-	}
+	}	
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + recipeId;
-		result = prime * result + ((recipeName == null) ? 0 : recipeName.hashCode());
-		return result;
+		return Objects.hash(recipeId, recipeName);
 	}
 
 	@Override
@@ -127,14 +124,7 @@ public class Recipe {
 		if (getClass() != obj.getClass())
 			return false;
 		Recipe other = (Recipe) obj;
-		if (recipeId != other.recipeId)
-			return false;
-		if (recipeName == null) {
-			if (other.recipeName != null)
-				return false;
-		} else if (!recipeName.equals(other.recipeName))
-			return false;
-		return true;
+		return recipeId == other.recipeId && Objects.equals(recipeName, other.recipeName);
 	}
 
 	@Override

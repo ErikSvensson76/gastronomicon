@@ -1,5 +1,7 @@
 package se.lexicon.erik.gastronmic.model;
 
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -71,18 +73,11 @@ public class MeasuredIngredient {
 
 	public int getId() {
 		return id;
-	}
+	}	
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(amount);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + id;
-		result = prime * result + ((measurement == null) ? 0 : measurement.hashCode());
-		return result;
+		return Objects.hash(amount, id, measurement);
 	}
 
 	@Override
@@ -94,13 +89,8 @@ public class MeasuredIngredient {
 		if (getClass() != obj.getClass())
 			return false;
 		MeasuredIngredient other = (MeasuredIngredient) obj;
-		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
-			return false;
-		if (id != other.id)
-			return false;
-		if (measurement != other.measurement)
-			return false;
-		return true;
+		return Double.doubleToLongBits(amount) == Double.doubleToLongBits(other.amount) && id == other.id
+				&& measurement == other.measurement;
 	}
 
 	@Override
