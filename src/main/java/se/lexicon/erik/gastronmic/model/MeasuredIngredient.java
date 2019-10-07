@@ -32,9 +32,9 @@ public class MeasuredIngredient {
 	private Measurement measurement;
 	
 	public MeasuredIngredient(Ingredient ingredient, double amount, Measurement measurement) {
-		this.ingredient = ingredient;
-		this.amount = amount;
-		this.measurement = measurement;
+		setIngredient(ingredient);
+		setAmount(amount);
+		setMeasurement(measurement);
 	}
 	
 	public MeasuredIngredient() {}
