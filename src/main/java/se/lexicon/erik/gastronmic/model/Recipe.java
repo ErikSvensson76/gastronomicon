@@ -74,7 +74,7 @@ public class Recipe {
 		return instructions;
 	}
 
-	public void setInstructions(List<Instruction> instructions) {
+	protected void setInstructions(List<Instruction> instructions) {
 		this.instructions = instructions;
 	}
 
@@ -108,7 +108,21 @@ public class Recipe {
 			ingredients.remove(ingredient);
 			ingredient.setRecipe(null);
 		}
-	}	
+	}
+	
+	public void clearIngredients() {
+		if(this.ingredients != null) {
+			ingredients.forEach(ingredient -> ingredient.setRecipe(null));
+			ingredients.clear();			
+		}
+	}
+	
+	public void clearInstructions() {
+		if(instructions != null) {
+			instructions.forEach(instruction -> instruction.setRecipe(null));
+			instructions.clear();
+		}
+	}
 
 	@Override
 	public int hashCode() {
