@@ -1,6 +1,5 @@
 package se.lexicon.erik.gastronmic.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,13 @@ public class IngredientController {
 	}
 	
 	@GetMapping("api/ingredients")
-	public ResponseEntity<List<Ingredient>> findAll(){
-		List<Ingredient> ingredients = (List<Ingredient>) ingredientRepo.findAll();		
-		return ResponseEntity.ok().body(ingredients);
+	public ResponseEntity<?> find(@RequestParam(defaultValue = "all") String param){
+		if(param.equals("all")) {
+			return ResponseEntity.ok().body(ingredientRepo.findAll());
+		}
+		
+		Optional<Ingredient> optional = ingredientRepo.findByName(param);
+		return optional.isPresent() ? ResponseEntity.ok(optional.get()) : ResponseEntity.notFound().build();		
 	}
 	
 	@PostMapping("api/ingredients")
@@ -61,19 +64,6 @@ public class IngredientController {
 		return ResponseEntity.ok(ingredientRepo.save(old));
 		
 	}
-	
-	@GetMapping("api/ingredients/name")
-	public ResponseEntity<Ingredient> findByName(@RequestParam("name") String name){
-		if(name == null) {
-			throw new IllegalArgumentException();
-		}
-		Optional<Ingredient> optional = ingredientRepo.findByName(name);
-		return optional.isPresent() ? ResponseEntity.ok(optional.get()) : ResponseEntity.notFound().build();		
-	}
-	
-	
-	
-
 }
 
 
