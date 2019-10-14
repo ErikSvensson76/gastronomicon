@@ -17,12 +17,17 @@ public class Ingredient {
 	@Column(unique = true, length = 50)
 	private String name;
 	
-	public Ingredient(String name) {
+	public Ingredient(int id, String name) {
+		this.id = id;
 		setName(name);
+	}
+	
+	public Ingredient(String name) {
+		this(0, name);
 	}	
 
 	public Ingredient() {
-	}
+	}	
 
 	public String getName() {
 		return name;
