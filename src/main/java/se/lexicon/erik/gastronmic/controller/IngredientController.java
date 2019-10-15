@@ -1,9 +1,5 @@
 package se.lexicon.erik.gastronmic.controller;
 
-import static se.lexicon.erik.gastronmic.converters.IngredientDtoConverter.convert;
-import static se.lexicon.erik.gastronmic.converters.IngredientDtoConverter.dtoToIngredient;
-import static se.lexicon.erik.gastronmic.converters.IngredientDtoConverter.ingredientToDto;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import se.lexicon.erik.gastronmic.converters.IngredientDtoConverter;
+import se.lexicon.erik.gastronmic.converters.EntityDtoConverter;
 import se.lexicon.erik.gastronmic.data.IngredientRepo;
 import se.lexicon.erik.gastronmic.dto.IngredientDto;
 import se.lexicon.erik.gastronmic.model.Ingredient;
@@ -27,24 +23,25 @@ import se.lexicon.erik.gastronmic.model.Ingredient;
 public class IngredientController {
 	
 	private IngredientRepo ingredientRepo;
+	private EntityDtoConverter converter;
 	
-		
 	@Autowired
-	public IngredientController(IngredientRepo ingredientRepo) {
+	public IngredientController(IngredientRepo ingredientRepo, EntityDtoConverter converter) {
 		this.ingredientRepo = ingredientRepo;
+		this.converter = converter;
 	}
-	
+
 	@GetMapping("api/ingredients")
 	public ResponseEntity<?> find(@RequestParam(defaultValue = "all") String param){
 		if(param.equals("all")) {
 			List<Ingredient> ingredients = (List<Ingredient>) ingredientRepo.findAll();
-			return ResponseEntity.ok().body(ingredientToDto(ingredients));
+			return ResponseEntity.ok().body(converter.ingredientToDto(ingredients));
 		}
 		
 		
 		Optional<Ingredient> optional = ingredientRepo.findByName(param);
 		
-		return optional.isPresent() ? ResponseEntity.ok(convert(IngredientDtoConverter::ingredientToDto, optional.get())) : ResponseEntity.notFound().build();		
+		return optional.isPresent() ? ResponseEntity.ok(converter.ingredientToDto(optional.get())) : ResponseEntity.notFound().build();		
 	}
 	
 	@PostMapping("api/ingredients")
@@ -52,28 +49,29 @@ public class IngredientController {
 		if(ingredient == null) {
 			throw new IllegalArgumentException();
 		}
-		return ResponseEntity.ok(ingredientRepo.save(dtoToIngredient(ingredient)));
+		return ResponseEntity.ok(ingredientRepo.save(converter.dtoToIngredient(ingredient)));
 	}
 	
 	@GetMapping("api/ingredients/{id}")
 	public ResponseEntity<IngredientDto> findById(@PathVariable("id")int id){
 		Optional<Ingredient> optional = ingredientRepo.findById(id);
 		if(optional.isPresent()) {
-			return ResponseEntity.ok(ingredientToDto(optional.get()));
+			return ResponseEntity.ok(converter.ingredientToDto(optional.get()));
 		}else {
 			return ResponseEntity.notFound().build();
 		}
 	}
 	
 	@PutMapping("api/ingredients/{id}")
-	public ResponseEntity<Ingredient> update(@PathVariable("id")int id, @ RequestBody Ingredient updated){
+	public ResponseEntity<IngredientDto> update(@PathVariable("id")int id, @ RequestBody IngredientDto updated){
 		Ingredient old = ingredientRepo.findById(id).orElseThrow(IllegalArgumentException::new);
 		if(id != updated.getId()) {
 			throw new SecurityException();
 		}
 		
 		old.setName(updated.getName());
-		return ResponseEntity.ok(ingredientRepo.save(old));		
+		old = ingredientRepo.save(old);
+		return ResponseEntity.ok(converter.ingredientToDto(old));		
 	}
 	
 	@DeleteMapping("api/ingredients/{id}")

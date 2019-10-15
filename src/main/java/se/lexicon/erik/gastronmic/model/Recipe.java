@@ -24,14 +24,24 @@ public class Recipe {
 	@OneToMany( mappedBy = "recipe", fetch = FetchType.LAZY,
 			cascade = CascadeType.ALL, orphanRemoval = true
 			)
+	
 	private List<MeasuredIngredient> ingredients;
 	
 	@OneToMany( mappedBy = "owner", fetch = FetchType.LAZY,
 			cascade = CascadeType.ALL, orphanRemoval = true
 			)
+	
 	private List<Instruction> instructions;
 	
-		
+	Recipe(int recipeId, String recipeName, String description, List<MeasuredIngredient> ingredients,
+			List<Instruction> instructions) {
+		this.recipeId = recipeId;
+		this.recipeName = recipeName;
+		this.description = description;
+		this.ingredients = ingredients;
+		this.instructions = instructions;
+	}
+
 	public Recipe(String recipeName, String description, List<MeasuredIngredient> ingredients,
 			List<Instruction> instructions) {
 		this.recipeName = recipeName;
@@ -74,7 +84,7 @@ public class Recipe {
 		return instructions;
 	}
 
-	protected void setInstructions(List<Instruction> instructions) {
+	public void setInstructions(List<Instruction> instructions) {
 		this.instructions = instructions;
 	}
 

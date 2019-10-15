@@ -1,5 +1,7 @@
 package se.lexicon.erik.gastronmic.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 public enum Measurement {
 	
 	ML("ml"),
@@ -15,12 +17,14 @@ public enum Measurement {
 	ST("st"),
 	PINCH("pinch");
 	
+	
 	private String measurement;
 
 	private Measurement(String measurement) {
 		this.measurement = measurement;
 	}
 
+	@JsonGetter
 	public String getMeasurement() {
 		return measurement;
 	}		

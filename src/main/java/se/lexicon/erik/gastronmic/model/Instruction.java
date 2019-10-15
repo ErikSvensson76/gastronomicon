@@ -23,6 +23,12 @@ public class Instruction {
 	@JoinColumn(name = "recipe_id")
 	private Recipe owner;
 	
+	Instruction(int id, String textContent, Recipe owner) {
+		this.id = id;
+		this.textContent = textContent;
+		this.owner = owner;
+	}
+
 	public Instruction(String textContent) {
 		setTextContent(textContent);
 	}

@@ -17,7 +17,7 @@ public class Ingredient {
 	@Column(unique = true, length = 50)
 	private String name;
 	
-	public Ingredient(int id, String name) {
+	Ingredient(int id, String name) {
 		this.id = id;
 		setName(name);
 	}
