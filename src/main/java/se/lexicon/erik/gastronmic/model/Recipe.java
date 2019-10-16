@@ -29,29 +29,30 @@ public class Recipe {
 	
 	@OneToMany( mappedBy = "owner", fetch = FetchType.LAZY,
 			cascade = CascadeType.ALL, orphanRemoval = true
-			)
-	
+			)	
 	private List<Instruction> instructions;
 	
-	Recipe(int recipeId, String recipeName, String description, List<MeasuredIngredient> ingredients,
-			List<Instruction> instructions) {
+	Recipe(int recipeId, String recipeName, String description, List<MeasuredIngredient> ingredients, List<Instruction> instructions) {
+		if(ingredients == null) throw new IllegalArgumentException("ingredients in Recipe was " + ingredients);
+		if(instructions == null) throw new IllegalArgumentException("instructions in Recipe was " + instructions);
+		
 		this.recipeId = recipeId;
-		this.recipeName = recipeName;
-		this.description = description;
-		this.ingredients = ingredients;
-		this.instructions = instructions;
-	}
-
-	public Recipe(String recipeName, String description, List<MeasuredIngredient> ingredients,
-			List<Instruction> instructions) {
-		this.recipeName = recipeName;
-		this.description = description;
-		this.ingredients = ingredients;
-		this.instructions = instructions;
-	}
+		setRecipeName(recipeName);
+		setDescription(description);		
+		for(MeasuredIngredient measuredIngredient : ingredients) {
+			addIngredient(measuredIngredient);
+		}
+		
+		for(Instruction instruction : instructions) {
+			addInstruction(instruction);
+		}		
+	}	
 
 	public Recipe(String recipeName, String description) {
-		this(recipeName, description, new ArrayList<>(), new ArrayList<>());
+		setRecipeName(recipeName);
+		setDescription(description);
+		setIngredients(new ArrayList<>());
+		setInstructions(new ArrayList<>());
 	}
 	
 	public Recipe () {}
@@ -93,6 +94,7 @@ public class Recipe {
 	}
 	
 	public void addInstruction(Instruction instruction) {
+		if(instructions == null) instructions = new ArrayList<>();
 		if(!instructions.contains(instruction)) {
 			instructions.add(instruction);
 			instruction.setRecipe(this);
@@ -100,6 +102,7 @@ public class Recipe {
 	}
 	
 	public void removeInstruction(Instruction toRemove) {
+		if(instructions == null) instructions = new ArrayList<>();
 		if(instructions.contains(toRemove)) {
 			instructions.remove(toRemove);
 			toRemove.setRecipe(null);			
@@ -107,6 +110,7 @@ public class Recipe {
 	}
 	
 	public void addIngredient(MeasuredIngredient ingredient) {
+		if(ingredients == null) ingredients = new ArrayList<>();
 		if(!ingredients.contains(ingredient)) {
 			ingredients.add(ingredient);
 			ingredient.setRecipe(this);
@@ -114,6 +118,7 @@ public class Recipe {
 	}
 	
 	public void removeIngredient(MeasuredIngredient ingredient) {
+		if(ingredients == null) ingredients = new ArrayList<>();
 		if(ingredients.contains(ingredient)) {
 			ingredients.remove(ingredient);
 			ingredient.setRecipe(null);
