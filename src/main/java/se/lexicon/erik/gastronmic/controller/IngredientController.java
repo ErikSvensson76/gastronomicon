@@ -1,11 +1,19 @@
 package se.lexicon.erik.gastronmic.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +53,7 @@ public class IngredientController {
 	}
 	
 	@PostMapping("api/ingredients")
-	public ResponseEntity<Ingredient> create(@RequestBody IngredientDto ingredient){
+	public ResponseEntity<Ingredient> create(@Valid @RequestBody IngredientDto ingredient){
 		if(ingredient == null) {
 			throw new IllegalArgumentException();
 		}
@@ -79,6 +87,20 @@ public class IngredientController {
 		ingredientRepo.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, Object>> validationErrorOnIngredient(MethodArgumentNotValidException e){
+		Map<String, Object> errors = new HashMap<>();
+		errors.put("code", 400);
+		errors.put("status", HttpStatus.BAD_REQUEST);
+		e.getBindingResult().getAllErrors().forEach(error ->{
+			String fieldName = ((FieldError)error).getField();
+			String message = error.getDefaultMessage();
+			errors.put(fieldName, message);
+		});
+		return ResponseEntity.badRequest().body(errors);
+	}
+	
 }
 
 
