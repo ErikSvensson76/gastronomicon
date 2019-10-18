@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +27,8 @@ import se.lexicon.erik.gastronmic.converters.EntityDtoConverter;
 import se.lexicon.erik.gastronmic.data.IngredientRepo;
 import se.lexicon.erik.gastronmic.dto.IngredientDto;
 import se.lexicon.erik.gastronmic.model.Ingredient;
+import se.lexicon.erik.gastronmic.validation.OnCreate;
+import se.lexicon.erik.gastronmic.validation.OnUpdate;
 
 @RestController
 public class IngredientController {
@@ -53,7 +56,7 @@ public class IngredientController {
 	}
 	
 	@PostMapping("api/ingredients")
-	public ResponseEntity<Ingredient> create(@Valid @RequestBody IngredientDto ingredient){
+	public ResponseEntity<Ingredient> create(@Validated(OnCreate.class) @RequestBody IngredientDto ingredient){
 		if(ingredient == null) {
 			throw new IllegalArgumentException();
 		}
@@ -71,7 +74,7 @@ public class IngredientController {
 	}
 	
 	@PutMapping("api/ingredients/{id}")
-	public ResponseEntity<IngredientDto> update(@PathVariable("id")int id, @ RequestBody IngredientDto updated){
+	public ResponseEntity<IngredientDto> update(@PathVariable("id")int id, @Validated(OnUpdate.class) @RequestBody IngredientDto updated){
 		Ingredient old = ingredientRepo.findById(id).orElseThrow(IllegalArgumentException::new);
 		if(id != updated.getId()) {
 			throw new SecurityException();

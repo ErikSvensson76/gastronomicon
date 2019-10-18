@@ -118,8 +118,15 @@ public class EntityDtoConverter extends EntityFactory{
 	}
 	
 	public Recipe dtoToRecipe(RecipeDto dto) {
-		List<Instruction> instructions = dtosToInstructions(dto.getInstructions());
-		List<MeasuredIngredient> ingredients = dtosToMeasuredIngredients(dto.getIngredients());
+		List<Instruction> instructions = new ArrayList<>();
+		if(dto.getInstructions() != null) {
+			instructions = dtosToInstructions(dto.getInstructions());
+		}
+		List<MeasuredIngredient> ingredients = new ArrayList<>();
+		if(dto.getIngredients() != null) {
+			ingredients = dtosToMeasuredIngredients(dto.getIngredients());
+		}		
+		
 		Recipe recipe = createRecipe(dto.getRecipeId(), dto.getRecipeName(), dto.getDescription(), ingredients, instructions);
 		return recipe;		
 	}

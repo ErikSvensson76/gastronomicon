@@ -2,12 +2,24 @@ package se.lexicon.erik.gastronmic.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.lang.Nullable;
+
 public class RecipeDto {
 	
-	private int recipeId;
+	
+	private int recipeId;	
+	@NotNull(message = "Recipe name is required")
+	@Size(min = 2, max = 255, message = "RecipeName is not between 2 and 255 letters")
 	private String recipeName;
+	@NotNull(message = "Description is required")
+	@Size(min = 2, max = 255, message = "Description is not between 2 and 255 letters")
 	private String description;
+	@Nullable
 	private List<MeasuredIngredientDto> ingredients;
+	@Nullable
 	private List<InstructionDto> instructions;
 	
 	public RecipeDto() {

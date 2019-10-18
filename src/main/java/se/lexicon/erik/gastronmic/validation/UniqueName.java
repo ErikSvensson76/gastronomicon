@@ -16,5 +16,6 @@ public @interface UniqueName {
 	String message() default "This ingredient name is already in the database";
 	public Class<?>[] groups() default{};
 	public Class<? extends Payload>[] payload() default{};
+		
 
 }

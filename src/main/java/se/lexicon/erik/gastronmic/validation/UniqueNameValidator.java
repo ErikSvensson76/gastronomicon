@@ -15,7 +15,7 @@ import se.lexicon.erik.gastronmic.model.Ingredient;
 public class UniqueNameValidator implements ConstraintValidator<UniqueName, String>{
 	
 	private IngredientRepo ingredientRepo;
-	
+
 	@Autowired
 	public UniqueNameValidator(IngredientRepo ingredientRepo) {
 		this.ingredientRepo = ingredientRepo;
@@ -24,7 +24,6 @@ public class UniqueNameValidator implements ConstraintValidator<UniqueName, Stri
 	@Override
 	public boolean isValid(String name, ConstraintValidatorContext context) {
 		Optional<Ingredient> optional = ingredientRepo.findByName(name);
-		
 		return !optional.isPresent();
 	}
 
